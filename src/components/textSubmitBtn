@@ -1,0 +1,23 @@
+<Box
+component="form"
+sx={{
+    '& .MuiTextField-root': { m: 1, width: '25ch' },
+}}
+noValidate
+autoComplete="off"
+>
+<TextField 
+    label="Nombre de fila" 
+    name="newName" 
+    id="outlined-size-small"
+    size="small"
+    onChange={(e) => {
+        e.preventDefault();
+        const updatedContexts = [...rowContexts];
+        const newName = e.target.elements.newName.value;
+        updatedContexts[contextIndex].name = newName;
+        setRowContexts(updatedContexts);
+    }}
+/>
+<Button type="submit" text="Añadir" variant="contained"/>
+</Box>

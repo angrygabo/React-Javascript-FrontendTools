@@ -1,0 +1,66 @@
+import { useState } from 'react';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+
+// Components
+import RowItems from './components/RowItems';
+
+// Fetch (products)
+import { initialModalItems } from './fetch';
+
+function App() {
+  
+  // Estados locales Modal
+  const [showModal, setShowProducts] = useState([]),
+        [rowContexts, setRowContexts] = useState([]);
+
+  const addNewContext = () => {
+    const newContext = {
+      id: rowContexts.length + 1,
+      name: `Fila ${rowContexts.length + 1}`,
+      template: 'left',
+      elements: []
+    };
+    setRowContexts([...rowContexts, newContext]);
+    setShowProducts({...showModal, [rowContexts.length]: false});
+  };
+
+  // Combina en un solo array toda la parrilla (Rows, id, name, templates, Items)
+  const combinePayload = () => {
+    const payload = rowContexts.map(({ id, name, template, elements }) => ({
+      id,
+      name,
+      template,
+      elements
+    }));
+    console.log(payload);
+  };
+
+  return (
+    <DndProvider backend={HTML5Backend}>
+        <div className="container">
+          {rowContexts.map((context, index) => (
+            <RowItems
+              key={context.id}
+              id={context.id}
+              name={context.name}
+              template={context.template}
+              elements={context.elements}
+              contextIndex={index}
+              setShowProducts={setShowProducts}
+              showModal={showModal}
+              setRowContexts={setRowContexts}
+              rowContexts={rowContexts}
+              initialModalItems={initialModalItems}
+            />
+          ))}
+          <div className="w-100">
+            <button onClick={addNewContext}>Añadir fila</button><br/><br/>
+            <button onClick={combinePayload}>Generar Payload</button>
+          </div>
+        </div>
+    </DndProvider>
+  );
+}
+
+export default App;
